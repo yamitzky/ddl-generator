@@ -12,12 +12,13 @@ def execute(command):
 
 for table in execute("SHOW TABLES")[1:]:
     res = execute("SHOW CREATE TABLE \`%s\` \G" % table)
-    if "View" in res[1]:
-        rows = res[2].split(":", 1)[-1].split(",")
-        cols = ["\t" + row + "," for row in rows]
-    else:
-        cols = ["\t" + row.strip() for row in res[3:-1]]
+    if len(res) >= 3:
+        if res[2].strip().startswith("View"):
+            rows = res[3].split(":", 1)[-1].replace(",", ",\n").split("\n")
+            cols = ["\t" + row.strip() + "," for row in rows]
+        else:
+            cols = ["\t" + row.strip() for row in res[3:]]
 
-    print table
-    print "\n".join(cols)
-    print "-" * 10
+        print table
+        print "\n".join(cols)
+        print "-" * 10
