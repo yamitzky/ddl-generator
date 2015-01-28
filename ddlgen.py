@@ -26,10 +26,10 @@ for table in execute("SHOW TABLES")[1:]:
     if len(res) >= 2:
         if res[0].strip().startswith("View"):
             rows = res[1].split(":", 1)[-1].replace(",", ",\n").split("\n")
-            cols = ["\t" + row.strip() + "," for row in rows]
         else:
-            cols = ["\t" + row.strip() for row in res[1:]]
+            rows = res[3:]
 
+        cols = ["\t" + row.strip() for row in rows]
         print table
         print "\n".join(cols)
         print "-" * 10
